@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Strength Checker | Cyber Neo</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Particles.js -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+    /* Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #0d0d0d, #1a0d2e);
+        background-size: 400% 400%;
+        color: #fff;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    /* Animate gradient */
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Particle background */
+    #particles-js { 
+        position: fixed; 
+        width: 100%; 
+        height: 100%; 
+        z-index: 0; /* behind container but above gradient */
+    }
+
+    /* Main container */
+    .container { 
+        position: relative;
+        z-index: 1; /* above particles */
+        max-width: 500px; 
+        margin: 80px auto; 
+        background: rgba(10,10,30,0.85); 
+        padding: 40px; 
+        border-radius: 15px; 
+        box-shadow: 0 0 30px #0ff; 
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+        border: 2px solid #0ff;
+    }
+
+    h2 { color: #0ff; margin-bottom: 20px; text-shadow: 0 0 10px #0ff; }
+
+    input[type="password"] {
+        width: 100%; 
+        padding: 15px; 
+        margin-bottom: 20px; 
+        border-radius: 10px; 
+        border: 1px solid #0ff;
+        background: #111;
+        color: #0ff;
+        font-size: 16px; 
+        transition: 0.3s;
+    }
+    input[type="password"]:focus { border-color: #ff00ff; outline: none; }
+
+    button {
+        padding: 12px 25px; 
+        font-size: 16px; 
+        background: #ff00ff; 
+        color: #fff; 
+        border: none; 
+        border-radius: 10px; 
+        cursor: pointer; 
+        transition: 0.3s;
+        box-shadow: 0 0 10px #ff00ff;
+    }
+    button:hover { background: #ff33ff; transform: scale(1.05); box-shadow: 0 0 20px #ff33ff; }
+
+    .feedback p { text-align: left; margin: 5px 0; font-size: 14px; animation: slideIn 0.5s ease-in; color: #ff4d4d; }
+
+    .strength { font-weight: bold; margin-top: 15px; font-size: 18px; padding: 10px; border-radius: 10px; text-shadow: 0 0 5px #fff; }
+
+    .strong { color: #0ff; background: #00ff99; box-shadow: 0 0 20px #00ff99; }
+    .moderate { color: #0ff; background: #ffff00; box-shadow: 0 0 20px #ffff00; }
+    .weak { color: #0ff; background: #ff0000; box-shadow: 0 0 20px #ff0000; }
+
+    @keyframes fadeIn { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes slideIn { from {opacity:0; transform:translateX(-20px);} to {opacity:1; transform:translateX(0);} }
+
+    .icon { font-size: 50px; margin-bottom: 10px; color: #0ff; text-shadow: 0 0 10px #0ff; }
+
+    /* Credit */
+    .credit {
+        position: fixed;
+        bottom: 10px;
+        right: 15px;
+        font-size: 12px;
+        color: #0ff;
+        opacity: 0.6;
+        font-style: italic;
+        z-index: 2;
+        transition: opacity 0.3s, text-shadow 0.3s;
+    }
+    .credit:hover { opacity: 1; text-shadow: 0 0 5px #0ff; }
+
+    /* Floating neon shapes */
+    .neon-shape {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 2px solid #0ff;
+        border-radius: 50%;
+        animation: float 10s ease-in-out infinite;
+        opacity: 0.3;
+        z-index: 0;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0) rotate(0deg); }
+        50% { transform: translateY(-200px) translateX(150px) rotate(180deg); }
+        100% { transform: translateY(0) translateX(0) rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<!-- Particle Background -->
+<div id="particles-js"></div>
+
+<!-- Floating shapes -->
+<div class="neon-shape" style="top: 50px; left: 30px;"></div>
+<div class="neon-shape" style="top: 200px; left: 300px; width:150px; height:150px;"></div>
+<div class="neon-shape" style="top: 400px; left: 150px;"></div>
+
+<!-- Main container -->
+<div class="container">
+    <div class="icon">🔒</div>
+    <h2>Cyber Neo Password Checker</h2>
+    <form method="POST">
+        <input type="password" name="password" placeholder="Enter your password" value="{{ password }}" required>
+        <button type="submit">Check Strength</button>
+    </form>
+
+    {% if feedback %}
+        <div class="feedback">
+            {% for f in feedback %}
+                <p>{{ f }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if strength %}
+        <div class="strength {% if 'Strong' in strength %}strong{% elif 'Moderate' in strength %}moderate{% else %}weak{% endif %}">
+            {{ strength }}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Credit -->
+<div class="credit">By Sylvester</div>
+
+<!-- Particle.js Config -->
+<script>
+window.onload = function() {
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+      "color": { "value": "#0ff" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.5 },
+      "size": { "value": 3 },
+      "line_linked": { "enable": true, "distance": 150, "color": "#0ff", "opacity": 0.4, "width": 1 },
+      "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false }
+    },
+    "interactivity": {
+      "events": {
+        "onhover": { "enable": true, "mode": "grab" },
+        "onclick": { "enable": true, "mode": "push" }
+      },
+      "modes": {
+        "grab": { "distance": 140, "line_linked": { "opacity": 0.7 } },
+        "push": { "particles_nb": 4 }
+      }
+    },
+    "retina_detect": true
+  });
+};
+</script>
+
+</body>
+</html>
