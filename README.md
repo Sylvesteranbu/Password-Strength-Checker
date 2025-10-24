@@ -41,7 +41,7 @@ Installation
 
 Clone the repository:
 
-git clone https://github.com/yourusername/cyber-neo-password-checker.git
+git clone [https://github.com/yourusername/cyber-neo-password-checker.git](https://github.com/Sylvesteranbu/Password-Strength-Checker.git)
 cd cyber-neo-password-checker
 
 
